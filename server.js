@@ -15,13 +15,20 @@ module.exports = function(args) {
   let cwd = args.cwd || process.cwd();
 
   app.use(express.static(cwd));
+  app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Expose-Headers', 'Content-Length');
+    res.header('Access-Control-Allow-Headers', 'range');
+    next();
+  });
+
   // start server
   server.listen(port, (err) => {
     if (err) {
       console.log(err);
     } else {
       console.log(`now serving files from ${colors.yellow(cwd)}`);
-      console.log(`please visit ${colors.green(`http:localhost${port == 80 ? '' : `:${port}`}/`)}`);
+      console.log(`please visit ${colors.green(`http://localhost${port == 80 ? '' : `:${port}`}/`)}`);
     }
   });
 };
